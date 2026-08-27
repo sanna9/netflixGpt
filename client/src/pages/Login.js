@@ -1,0 +1,117 @@
+import React, { useRef, useState } from "react";
+import Header from "./Header";
+import Button from "../components/Button";
+import { validateForm } from "../utils/validate";
+import { LOGIN_BG, USER_IMG } from "../constants/constants";
+import { signIn, signUp } from "../services/authApi";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addUser } from "../store/userSlice";
+
+const Login = () => {
+  const [isSignIn, setIsSignIn] = useState(true);
+  const [emailError, setEmailError] = useState(null);
+  const [passwordError, setPasswordError] = useState(null);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const toggleSignInForm = () => {
+    setIsSignIn(!isSignIn);
+  };
+
+  const email = useRef(null);
+  const password = useRef(null);
+  const name = useRef(null);
+
+  const handleButton = async () => {
+    const errorMessage = validateForm(
+      email?.current?.value || "",
+      password?.current?.value || ""
+    );
+    setEmailError(errorMessage.email);
+    setPasswordError(errorMessage.password);
+
+    if (errorMessage.email || errorMessage.password) {
+      return;
+    }
+
+    try {
+      const response = isSignIn
+        ? await signIn({
+            email: email?.current?.value,
+            password: password?.current?.value,
+          })
+        : await signUp({
+            name: name?.current?.value,
+            email: email?.current?.value,
+            password: password?.current?.value,
+            photoURL: USER_IMG,
+          });
+
+      localStorage.setItem("authToken", response.token);
+      dispatch(addUser(response.user));
+      navigate("/browse");
+    } catch (error) {
+      setEmailError(error.message);
+    }
+  };
+
+  return (
+    <>
+      <Header />
+
+      <div className="absolute">
+        <img src={LOGIN_BG} alt="logo" className="w-dvw h-screen" />
+      </div>
+      <div className="absolute inset-0 bg-black bg-opacity-50"></div>
+      <form
+        onSubmit={(e) => e.preventDefault()}
+        className="absolute w-1/4 p-10 text-white top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black bg-opacity-70 p-6 text-white rounded"
+      >
+        <h1 className="font-bold text-3xl pb-5">
+          {isSignIn ? "Sign In" : "Sign Up"}
+        </h1>
+        {!isSignIn ? (
+          <>
+            <input
+              ref={name}
+              type="text"
+              placeholder="Full Name"
+              className="p-4 my-2 w-full bg-transparent border rounded"
+            />
+          </>
+        ) : (
+          ""
+        )}
+
+        <input
+          ref={email}
+          type="text"
+          placeholder="Email"
+          className="p-4 my-2 w-full bg-transparent border rounded"
+        />
+        <p className="text-red-500">{emailError}</p>
+        <input
+          ref={password}
+          type="password"
+          placeholder="Enter Password"
+          className="p-4 my-2 w-full bg-transparent border rounded"
+        />
+        <p className="text-red-500">{passwordError}</p>
+        <Button
+          buttonClassName="p-2 bg-red-700 w-full mt-4 rounded"
+          onClick={handleButton}
+          label={isSignIn ? "Sign In" : "Sign Up"}
+          labelClassName="justify-center"
+        />
+        <p className="pt-2" onClick={toggleSignInForm}>
+          {isSignIn
+            ? "New to Netflix? Sign up now"
+            : "Already have an Account? Sign In"}
+        </p>
+      </form>
+    </>
+  );
+};
+
+export default Login;
