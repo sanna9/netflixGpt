@@ -19,6 +19,16 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
     photoURL: String,
+    watchlist: [
+      {
+        id: { type: Number, required: true },
+        title: { type: String, required: true },
+        poster_path: String,
+        backdrop_path: String,
+        overview: String,
+        release_date: String,
+      },
+    ],
   },
   { timestamps: true }
 );

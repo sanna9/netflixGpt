@@ -11,6 +11,7 @@ import { changeLanguage } from "../store/configSlice";
 import { useTranslation } from "../hooks/useTranslation";
 import { useLocation } from "react-router-dom";
 import { getCurrentUser } from "../services/authApi";
+import { FaUserLarge } from "react-icons/fa6";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -78,10 +79,20 @@ const Header = () => {
   if (!user) return null;
 
   return (
-    <div className="absolute px-8 py-2 z-10 flex justify-between w-full">
+    <div className="absolute px-8 py-2 z-10 flex items-center justify-between w-full">
       <a href="/browse">
         <img className="w-44" src={LOGO} alt="logo" />
       </a>
+
+      <button
+        type="button"
+        className={`absolute left-1/2 -translate-x-1/2 text-white ${
+          location.pathname === "/watchlist" ? "font-bold" : ""
+        }`}
+        onClick={() => navigate("/watchlist")}
+      >
+        Watch List
+      </button>
 
       {user && (
         <div className="flex items-center space-x-4">
@@ -103,11 +114,17 @@ const Header = () => {
           <Dropdown
             items={dropdownItems}
             trigger={
-              <img
-                className="w-10 rounded-3xl cursor-pointer"
-                src={user?.photoURL}
-                alt="user-icon"
-              />
+              user?.photoURL ? (
+                <img
+                  className="w-10 h-10 rounded-full object-cover cursor-pointer border border-white/30"
+                  src={user?.photoURL}
+                  alt="user-icon"
+                />
+              ) : (
+                <div className="w-10 h-10 rounded-full bg-gray-800 border border-white/20 flex items-center justify-center cursor-pointer shadow-md shadow-black/30">
+                  <FaUserLarge className="text-white text-sm" />
+                </div>
+              )
             }
           />
         </div>

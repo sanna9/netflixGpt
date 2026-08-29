@@ -1,0 +1,12 @@
+{
+  "name": "netflix-gpt-root",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"npm --prefix server start\" \"npm --prefix client start\"",
+    "server": "npm --prefix server start",
+    "client": "npm --prefix client start"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.1"
+  }
+}

@@ -36,16 +36,17 @@ const Login = () => {
     }
 
     try {
+      const userName = name?.current?.value?.trim() || "User";
       const response = isSignIn
         ? await signIn({
             email: email?.current?.value,
             password: password?.current?.value,
           })
         : await signUp({
-            name: name?.current?.value,
+            name: userName,
             email: email?.current?.value,
             password: password?.current?.value,
-            photoURL: USER_IMG,
+            photoURL: "",
           });
 
       localStorage.setItem("authToken", response.token);

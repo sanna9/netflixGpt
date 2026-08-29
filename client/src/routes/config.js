@@ -3,6 +3,7 @@ import Login from "../pages/Login";
 import Error from "../pages/Error";
 import MovieDetail from "../pages/MovieDetail";
 import GptSearch from "../components/GptSearch";
+import Watchlist from "../pages/Watchlist";
 
 const config = [
   {
@@ -24,6 +25,10 @@ const config = [
   {
     path: "gpt-search",
     element: <GptSearch />,
+  },
+  {
+    path: "/watchlist",
+    element: <Watchlist />,
   },
 ];
 
