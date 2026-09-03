@@ -18,9 +18,9 @@ const Header = () => {
   const user = useSelector((store) => store.user);
   const dispatch = useDispatch();
   const location = useLocation();
-  const showGptSearch = useSelector((store) => store.gpt.showGptSearch);
   const langKey = useSelector((store) => store.config.lang) || "en";
-  const t = useTranslation(langKey, showGptSearch);
+  const isGptSearchPage = location.pathname === "/gpt-search";
+  const t = useTranslation(langKey, isGptSearchPage);
 
   const handleSignOut = useCallback(async () => {
     try {
@@ -91,7 +91,7 @@ const Header = () => {
 
       {user && (
         <div className="flex items-center space-x-4">
-          {showGptSearch && (
+          {isGptSearchPage && (
             <Select
               options={SUPPORTED_LANG}
               onChange={handleLanguageChange}
@@ -101,7 +101,7 @@ const Header = () => {
           )}
           <Button
             label={
-              location.pathname === "/gpt-search" ? t("home") : t("gptSearch")
+              isGptSearchPage ? t("home") : t("gptSearch")
             }
             buttonClassName="bg-red-700 text-white"
             onClick={handleButtonClick}
