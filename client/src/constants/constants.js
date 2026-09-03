@@ -27,5 +27,3 @@ export const SUPPORTED_LANG = [
     label: "Spanish",
   },
 ];
-
-export const OPENAI_KEY = process.env.REACT_APP_OPENAI_KEY;

@@ -1,11 +1,13 @@
-const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
+const API_URL =
+  process.env.REACT_APP_API_URL ||
+  (process.env.NODE_ENV === "development" ? "http://localhost:5000" : "");
 
 const request = async (path, options = {}) => {
   const response = await fetch(`${API_URL}/api/auth${path}`, {
     headers: { "Content-Type": "application/json", ...options.headers },
     ...options,
   });
-  const data = await response.json();
+  const data = await response.json().catch(() => ({}));
 
   if (!response.ok) {
     throw new Error(data.message || "Authentication request failed");

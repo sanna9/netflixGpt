@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import Header from "./Header";
 import Button from "../components/Button";
 import { validateForm } from "../utils/validate";
-import { LOGIN_BG, USER_IMG } from "../constants/constants";
+import { LOGIN_BG } from "../constants/constants";
 import { signIn, signUp } from "../services/authApi";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -61,13 +61,13 @@ const Login = () => {
     <>
       <Header />
 
-      <div className="absolute">
-        <img src={LOGIN_BG} alt="logo" className="w-dvw h-screen" />
+      <div className="fixed inset-0">
+        <img src={LOGIN_BG} alt="Movies and shows" className="h-full w-full object-cover" />
       </div>
       <div className="absolute inset-0 bg-black bg-opacity-50"></div>
       <form
         onSubmit={(e) => e.preventDefault()}
-        className="absolute w-1/4 p-10 text-white top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black bg-opacity-70 p-6 text-white rounded"
+        className="absolute w-[calc(100%-2rem)] max-w-md p-8 text-white top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black bg-opacity-80 rounded"
       >
         <h1 className="font-bold text-3xl pb-5">
           {isSignIn ? "Sign In" : "Sign Up"}
@@ -78,6 +78,7 @@ const Login = () => {
               ref={name}
               type="text"
               placeholder="Full Name"
+              required
               className="p-4 my-2 w-full bg-transparent border rounded"
             />
           </>
@@ -87,7 +88,7 @@ const Login = () => {
 
         <input
           ref={email}
-          type="text"
+          type="email"
           placeholder="Email"
           className="p-4 my-2 w-full bg-transparent border rounded"
         />
@@ -105,11 +106,11 @@ const Login = () => {
           label={isSignIn ? "Sign In" : "Sign Up"}
           labelClassName="justify-center"
         />
-        <p className="pt-2" onClick={toggleSignInForm}>
+        <button type="button" className="pt-4 text-left hover:underline" onClick={toggleSignInForm}>
           {isSignIn
             ? "New to Netflix? Sign up now"
             : "Already have an Account? Sign In"}
-        </p>
+        </button>
       </form>
     </>
   );

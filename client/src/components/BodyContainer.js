@@ -2,8 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import MovieList from "./MovieList";
 import { getWatchlist } from "../services/watchlistApi";
-import { getPersonalizedRecommendations } from "../services/personalizedRecommendations";
-import { movieSearchApi } from "../services/movieSearchApi";
+import { movieRecommendationsApi } from "../services/movieRecommendationsApi";
 
 const PersonalizedRecommendations = () => {
   const user = useSelector((store) => store?.user);
@@ -31,24 +30,25 @@ const PersonalizedRecommendations = () => {
           return;
         }
 
-        const suggestedTitles = await getPersonalizedRecommendations(
-          user.displayName || "there",
-          watchlist
+        const recommendationGroups = await Promise.all(
+          watchlist.slice(-5).map((movie) => movieRecommendationsApi(movie.id))
         );
-
-        if (!suggestedTitles.length) {
-          if (isMounted) {
-            setMovies(popularMovies.slice(0, 10));
-          }
-          return;
-        }
-
-        const tmdbResults = await Promise.all(
-          suggestedTitles.map((movieName) => movieSearchApi(movieName))
+        const savedIds = new Set(watchlist.map((movie) => movie.id));
+        const uniqueRecommendations = Array.from(
+          new Map(
+            recommendationGroups
+              .flat()
+              .filter((movie) => movie?.id && !savedIds.has(movie.id))
+              .map((movie) => [movie.id, movie])
+          ).values()
         );
 
         if (isMounted) {
-          setMovies(tmdbResults.flat().filter(Boolean).slice(0, 10));
+          setMovies(
+            uniqueRecommendations.length
+              ? uniqueRecommendations.slice(0, 10)
+              : popularMovies.slice(0, 10)
+          );
         }
       } catch (error) {
         if (isMounted) {
@@ -62,7 +62,7 @@ const PersonalizedRecommendations = () => {
     return () => {
       isMounted = false;
     };
-  }, [user?.uid, user?.displayName, popularMovies]);
+  }, [user, popularMovies]);
 
   if (!movies.length) return null;
 

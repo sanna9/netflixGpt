@@ -1,4 +1,3 @@
-import { useDispatch, useSelector } from "react-redux";
 import { API_OPTIONS } from "../constants/constants";
 
 const popularMoviesApi = async () => {

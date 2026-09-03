@@ -9,8 +9,8 @@ node_modules/
 # environment files
 .env
 .env.*
-
-src/constants/constants.js
+!.env.example
+!**/.env.example
 
 # testing
 /coverage

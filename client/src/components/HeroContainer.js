@@ -8,7 +8,7 @@ import ShimmerHero from "./ShimmerHero";
 const HeroContainer = () => {
   const movies = useSelector((store) => store?.movies?.nowPlayingMovies);
 
-  const [selectedMovie, setSelectedMovie] = useState(movies[0] || {});
+  const [selectedMovie, setSelectedMovie] = useState({});
 
   const {
     original_title,
@@ -20,9 +20,9 @@ const HeroContainer = () => {
     id,
   } = selectedMovie || {};
 
-  const trailerMoviesList = useMemo(() => movies.slice(0, 5), [movies]);
+  const trailerMoviesList = useMemo(() => movies?.slice(0, 5) || [], [movies]);
 
-  if (movies?.length === 0) return <ShimmerHero />;
+  if (!movies?.length) return <ShimmerHero />;
 
   const handleMovieClick = (movie) => {
     setSelectedMovie(movie);

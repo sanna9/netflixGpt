@@ -3,33 +3,34 @@ import nowPlayingMoviesApi from "../services/nowPlayingMoviesApi";
 import HeroContainer from "../components/HeroContainer";
 import BodyContainer from "../components/BodyContainer";
 import { useDispatch, useSelector } from "react-redux";
-import GptSearch from "../components/GptSearch";
 import { addNowPlayingMovies, addPopularMovies } from "../store/moviesSlice";
 import popularMoviesApi from "../services/popularMoviesApi";
 import Layout from "../components/Layout";
-import { useNavigate } from "react-router-dom";
 
 const Browse = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const nowPlayingMovies = useSelector((store) => store.nowPlayingMovies);
-  const popularMovies = useSelector((store) => store.popularMovies);
+  const nowPlayingMovies = useSelector(
+    (store) => store.movies.nowPlayingMovies
+  );
+  const popularMovies = useSelector((store) => store.movies.popularMovies);
 
   useEffect(() => {
-    !nowPlayingMovies &&
+    if (!nowPlayingMovies.length) {
       nowPlayingMoviesApi()
         .then((movies) => dispatch(addNowPlayingMovies(movies)))
         .catch((error) =>
           console.error("Error fetching now playing movies in Browse:", error)
         );
+    }
 
-    !popularMovies &&
+    if (!popularMovies.length) {
       popularMoviesApi()
         .then((movies) => dispatch(addPopularMovies(movies)))
         .catch((error) =>
           console.error("Error fetching now playing movies in Browse:", error)
         );
-  }, [nowPlayingMovies, popularMovies]);
+    }
+  }, [dispatch, nowPlayingMovies.length, popularMovies.length]);
 
   return (
     <Layout>

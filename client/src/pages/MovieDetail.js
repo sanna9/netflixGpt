@@ -20,18 +20,11 @@ const MovieDetail = () => {
   const [isSaved, setIsSaved] = useState(false);
   const [watchlistError, setWatchlistError] = useState(null);
 
-  const getDetailMovie = async (id) => {
-    try {
-      const movieDetails = await detailMovieApi(id);
-
-      dispatch(addDetailMovie(movieDetails));
-    } catch (error) {
-      console.error(error);
-    }
-  };
   useEffect(() => {
-    getDetailMovie(id);
-  }, [id]);
+    detailMovieApi(id)
+      .then((movieDetails) => dispatch(addDetailMovie(movieDetails)))
+      .catch((error) => console.error(error));
+  }, [dispatch, id]);
 
   useEffect(() => {
     getWatchlist()

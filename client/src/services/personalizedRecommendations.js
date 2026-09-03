@@ -1,4 +1,6 @@
-import openAi from "../utils/openAi";
+const API_URL =
+  process.env.REACT_APP_API_URL ||
+  (process.env.NODE_ENV === "development" ? "http://localhost:5000" : "");
 
 export const buildPersonalizedRecommendationPrompt = (userName, watchlist = []) => {
   const list = watchlist.length
@@ -10,18 +12,17 @@ export const buildPersonalizedRecommendationPrompt = (userName, watchlist = []) 
 
 export const getPersonalizedRecommendations = async (userName, watchlist = []) => {
   try {
-    const prompt = buildPersonalizedRecommendationPrompt(userName, watchlist);
-    const aiResults = await openAi.chat.completions.create({
-      model: "gpt-3.5-turbo",
-      messages: [{ role: "user", content: prompt }],
+    const response = await fetch(`${API_URL}/api/recommendations`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("authToken") || ""}`,
+      },
+      body: JSON.stringify({ userName, watchlist }),
     });
-
-    const rawResponse = aiResults.choices[0]?.message?.content || "";
-
-    return rawResponse
-      .split("\n")
-      .map((line) => line.replace(/^\d+[\.")]?\s*/, "").trim())
-      .filter(Boolean);
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message);
+    return data.movies || [];
   } catch (error) {
     console.error("Personalized recommendation error:", error);
     return [];

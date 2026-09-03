@@ -1,4 +1,6 @@
-const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
+const API_URL =
+  process.env.REACT_APP_API_URL ||
+  (process.env.NODE_ENV === "development" ? "http://localhost:5000" : "");
 
 const request = async (path, options = {}) => {
   const token = localStorage.getItem("authToken");
@@ -10,7 +12,7 @@ const request = async (path, options = {}) => {
     },
     ...options,
   });
-  const data = await response.json();
+  const data = await response.json().catch(() => ({}));
 
   if (!response.ok) {
     throw new Error(data.message || "Watchlist request failed");

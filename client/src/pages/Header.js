@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo } from "react";
+import React, { useCallback, useEffect } from "react";
 import Dropdown from "../components/Dropdown";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -32,15 +32,10 @@ const Header = () => {
     }
   }, [dispatch, navigate]);
 
-  const dropdownItems = useMemo(() => {
-    return [
-      { label: user?.displayName },
-      {
-        label: t("logout"),
-        onClick: handleSignOut,
-      },
-    ];
-  }, [user, langKey, showGptSearch, navigate]);
+  const dropdownItems = [
+    { label: user?.displayName },
+    { label: t("logout"), onClick: handleSignOut },
+  ];
 
   useEffect(() => {
     const token = localStorage.getItem("authToken");

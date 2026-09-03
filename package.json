@@ -2,11 +2,24 @@
   "name": "netflix-gpt-root",
   "private": true,
   "scripts": {
+    "build": "npm --prefix client ci && npm --prefix client run build",
+    "test": "npm --prefix client test -- --watchAll=false --runInBand --forceExit",
     "dev": "concurrently \"npm --prefix server start\" \"npm --prefix client start\"",
     "server": "npm --prefix server start",
     "client": "npm --prefix client start"
   },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.9.5"
+  },
   "devDependencies": {
     "concurrently": "^9.0.1"
+  },
+  "overrides": {
+    "qs": "^6.16.0"
   }
 }

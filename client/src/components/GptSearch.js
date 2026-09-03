@@ -7,7 +7,6 @@ import { useTranslation } from "../hooks/useTranslation";
 import {
   addGptMovieList,
   clearGptMovieList,
-  toggleGptSearchView,
 } from "../store/gptSlice";
 import { movieSearchApi } from "../services/movieSearchApi";
 import { openAiSearch } from "../services/openAiSearch";
@@ -20,6 +19,7 @@ const GptSearch = () => {
 
   const [searchText, setSearchText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [searchError, setSearchError] = useState("");
 
   const handleGptSearch = useCallback(async () => {
     if (!searchText.trim()) {
@@ -28,6 +28,7 @@ const GptSearch = () => {
     }
 
     setIsLoading(true);
+    setSearchError("");
     try {
       // Get movie suggestions from GPT
       const moviesList = await openAiSearch(searchText);
@@ -37,11 +38,7 @@ const GptSearch = () => {
       );
       dispatch(addGptMovieList(tmdbResults));
     } catch (error) {
-      if (error.response?.status === 429) {
-        console.error("Rate limit exceeded. Please try again later.");
-      } else {
-        console.error("Error during search:", error);
-      }
+      setSearchError(error.message || "Unable to search right now");
     } finally {
       setIsLoading(false);
     }
@@ -50,9 +47,6 @@ const GptSearch = () => {
   useEffect(() => {
     dispatch(clearGptMovieList());
 
-    return () => {
-      dispatch(toggleGptSearchView()); // Cleanup on unmount
-    };
   }, [dispatch]);
 
   return (
@@ -69,7 +63,13 @@ const GptSearch = () => {
             searchText={searchText}
             onSearchTextChange={setSearchText}
             onClick={handleGptSearch}
+            isLoading={isLoading}
           />
+          {searchError && (
+            <p className="relative mx-auto mt-3 w-11/12 max-w-2xl rounded bg-red-950/90 p-3 text-center text-white">
+              {searchError}
+            </p>
+          )}
           <MovieSuggestions />
         </div>
       </div>

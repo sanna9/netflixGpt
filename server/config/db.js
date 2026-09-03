@@ -7,9 +7,7 @@ const atlasHosts = [
 ].join(",");
 
 const getConnectionUri = (mongoUri) => {
-  if (!mongoUri.startsWith("mongodb+srv://")) {
-    return mongoUri;
-  }
+  if (!mongoUri.startsWith("mongodb+srv://")) return mongoUri;
 
   const connectionDetails = mongoUri.match(/^mongodb\+srv:\/\/(.+?)@[^/]+\/(.*)$/);
   if (!connectionDetails) {
@@ -21,6 +19,8 @@ const getConnectionUri = (mongoUri) => {
   return `mongodb://${credentials}@${atlasHosts}/${database}?authSource=admin&replicaSet=atlas-u47rt1-shard-0&tls=true`;
 };
 
+let connectionPromise;
+
 const connectToDatabase = async () => {
   const mongoUri = process.env.MONGO_URI;
 
@@ -28,7 +28,16 @@ const connectToDatabase = async () => {
     throw new Error("MONGO_URI is not configured");
   }
 
-  await mongoose.connect(getConnectionUri(mongoUri));
+  if (!connectionPromise) {
+    connectionPromise = mongoose
+      .connect(getConnectionUri(mongoUri))
+      .catch((error) => {
+        connectionPromise = undefined;
+        throw error;
+      });
+  }
+
+  await connectionPromise;
   await mongoose.connection.db.admin().ping();
   console.log("Connected to MongoDB");
 };

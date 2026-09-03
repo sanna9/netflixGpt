@@ -1,6 +1,6 @@
 import React from "react";
 import MovieCard from "./MovieCard";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { addDetailMovie } from "../store/moviesSlice";
 import { detailMovieApi } from "../services/detailMovieApi";
 import { useNavigate } from "react-router-dom";
@@ -8,7 +8,6 @@ import { useNavigate } from "react-router-dom";
 const MovieList = ({ title, movies }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { movieDetails } = useSelector((state) => state.movies);
   const flattenedMovies = movies?.flat?.(Infinity) || movies || [];
 
   const getDetailMovie = async (movieId) => {
@@ -33,14 +32,13 @@ const MovieList = ({ title, movies }) => {
               {flattenedMovies?.map((movie) => (
                 <MovieCard
                   key={movie?.id}
-                  j
                   posterPath={movie?.poster_path}
                   onClick={() => getDetailMovie(movie?.id)}
                 />
               ))}
             </>
           ) : (
-            "No movies Found"
+            <p className="py-4 text-gray-400">No movies found.</p>
           )}
         </div>
       </div>

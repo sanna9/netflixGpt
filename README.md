@@ -51,6 +51,7 @@ Create `server/.env`:
 PORT=5000
 MONGO_URI=your_mongodb_atlas_uri
 JWT_SECRET=your_long_random_secret
+OPENAI_API_KEY=your_openai_api_key
 ```
 
 Create `client/.env`:
@@ -58,8 +59,11 @@ Create `client/.env`:
 ```env
 REACT_APP_API_URL=http://localhost:5000
 REACT_APP_TMDB_KEY=your_tmdb_api_key
-REACT_APP_OPENAI_KEY=your_openai_api_key
 ```
+
+The OpenAI key belongs in `server/.env` as `OPENAI_API_KEY`. Never put a
+secret key in a variable beginning with `REACT_APP_`, because React includes
+those values in the public browser bundle.
 
 ### 3. Run
 
@@ -79,10 +83,26 @@ npm.cmd --prefix client start
 - `POST /api/auth/signin` - Sign in
 - `GET /api/auth/me` - Get the current user
 
-## Next Steps
+## Possible Future Improvements
 
-- Watchlist and saved movies
-- Personalized recommendations
-- More movie details and ratings
-- Accessibility, performance, and test improvements
+- Add end-to-end browser tests
+- Add password reset and email verification
+- Move TMDB requests behind the API for stricter key control
+
+## Deploy to Vercel (free Hobby plan)
+
+1. Push this repository to GitHub and import it into Vercel.
+2. Keep the Vercel project **Root Directory** at the repository root.
+3. Add these Vercel environment variables:
+   - `MONGO_URI`
+   - `JWT_SECRET`
+   - `OPENAI_API_KEY`
+   - `REACT_APP_TMDB_KEY`
+4. Do not add `REACT_APP_API_URL` on Vercel; the frontend and API use the same URL.
+5. In MongoDB Atlas, allow Vercel connections. For a student demo, Atlas network
+   access can temporarily allow `0.0.0.0/0`; use a strong database password.
+6. Deploy. The included `vercel.json` builds React and routes `/api/*` to Express.
+
+After deployment, test sign-up, sign-in, movie browsing, AI search, saving a
+movie, refreshing the page, and opening a movie URL directly.
 

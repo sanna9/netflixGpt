@@ -1,5 +1,4 @@
 import React from "react";
-import "./InputLabel.scss";
 
 function InputLabel({
   id,
@@ -17,10 +16,6 @@ function InputLabel({
   labelClassName = "",
   htmlFor,
 }) {
-  const className = inputClassName
-    ? `form-control ${inputClassName}`
-    : "form-control";
-
   return (
     <div className="input-label-container">
       {label && (

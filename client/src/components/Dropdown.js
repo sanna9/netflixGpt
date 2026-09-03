@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Button from "./Button";
 
 const Dropdown = ({ items, trigger }) => {
   const [isOpen, setIsOpen] = useState(false);
