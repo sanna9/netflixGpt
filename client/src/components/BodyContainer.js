@@ -78,10 +78,11 @@ const BodyContainer = () => {
     movies && (
       <div className="bg-black">
         <div className="-mt-60 z-10 relative">
+          <PersonalizedRecommendations />
           <MovieList title={"Now Playing"} movies={movies?.nowPlayingMovies} />
           <MovieList title={"Popular"} movies={movies?.popularMovies} />
           <MovieList title={"Trending"} movies={movies?.nowPlayingMovies} />
-          <PersonalizedRecommendations />
+          
         </div>
       </div>
     )
