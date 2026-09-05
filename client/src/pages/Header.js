@@ -74,36 +74,40 @@ const Header = () => {
   if (!user) return null;
 
   return (
-    <div className="absolute px-8 py-2 z-10 flex items-center justify-between w-full">
+    <header className="absolute z-20 flex w-full flex-wrap items-center justify-between gap-2 bg-gradient-to-b from-black/90 to-transparent px-3 py-2 sm:flex-nowrap sm:px-6 lg:px-8">
       <a href="/browse">
-        <img className="w-44" src={LOGO} alt="logo" />
+        <img
+          className="w-24 sm:w-32 lg:w-44"
+          src={LOGO}
+          alt="NetflixGPT home"
+        />
       </a>
 
-      <button
-        type="button"
-        className={`absolute left-1/2 -translate-x-1/2 text-white ${
-          location.pathname === "/watchlist" ? "font-bold" : ""
-        }`}
-        onClick={() => navigate("/watchlist")}
-      >
-        Watch List
-      </button>
-
       {user && (
-        <div className="flex items-center space-x-4">
+        <nav className="flex flex-wrap items-center justify-end gap-2 sm:flex-nowrap sm:gap-3 lg:gap-4">
+          <button
+            type="button"
+            className={`whitespace-nowrap text-xs text-white hover:underline sm:text-sm ${
+              location.pathname === "/watchlist" ? "font-bold" : ""
+            }`}
+            onClick={() => navigate("/watchlist")}
+          >
+            My List
+          </button>
+
           {isGptSearchPage && (
             <Select
               options={SUPPORTED_LANG}
               onChange={handleLanguageChange}
-              placeholder="Select Language"
-              className="m-2 bg-white  p-2 rounded"
+              placeholder="Language"
+              className="max-w-24 rounded bg-white p-1 text-xs sm:max-w-none sm:p-2 sm:text-sm"
             />
           )}
           <Button
             label={
               isGptSearchPage ? t("home") : t("gptSearch")
             }
-            buttonClassName="bg-red-700 text-white"
+            buttonClassName="whitespace-nowrap bg-red-700 px-2 py-1 text-xs text-white sm:px-4 sm:py-2 sm:text-sm"
             onClick={handleButtonClick}
           />
           <Dropdown
@@ -111,20 +115,20 @@ const Header = () => {
             trigger={
               user?.photoURL ? (
                 <img
-                  className="w-10 h-10 rounded-full object-cover cursor-pointer border border-white/30"
+                  className="h-8 w-8 cursor-pointer rounded-full border border-white/30 object-cover sm:h-10 sm:w-10"
                   src={user?.photoURL}
                   alt="user-icon"
                 />
               ) : (
-                <div className="w-10 h-10 rounded-full bg-gray-800 border border-white/20 flex items-center justify-center cursor-pointer shadow-md shadow-black/30">
+                <div className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-white/20 bg-gray-800 shadow-md shadow-black/30 sm:h-10 sm:w-10">
                   <FaUserLarge className="text-white text-sm" />
                 </div>
               )
             }
           />
-        </div>
+        </nav>
       )}
-    </div>
+    </header>
   );
 };
 

@@ -13,18 +13,22 @@ const VideoTitle = ({
   voteCount,
 }) => {
   return (
-    <div className="px-24 w-full absolute pt-56 bg-gradient-to-r from-black aspect-video">
-      <h1 className="text-4xl font-bold pb-4 text-white">{title}</h1>
+    <div className="absolute inset-0 z-10 flex flex-col justify-center bg-gradient-to-r from-black via-black/70 to-transparent px-4 pb-20 pt-24 sm:px-8 sm:pb-28 lg:px-24 lg:pb-40 lg:pt-32">
+      <h1 className="max-w-2xl pb-3 text-3xl font-bold text-white sm:text-4xl lg:text-5xl">
+        {title}
+      </h1>
       <div>
-        <span className="flex items-center gap-1 text-white text-sm mb-4 capitalize">
+        <span className="mb-3 flex flex-wrap items-center gap-1 text-xs capitalize text-white sm:mb-4 sm:text-sm">
           <FaStar className="text-yellow-500" /> {reviewStar} | {voteCount}{" "}
-          <span className="pl-8">
+          <span className="pl-2 sm:pl-8">
             {" "}
             {releaseDate?.split("-")[0]} | {originalLang}
           </span>
         </span>
       </div>
-      <p className="mb-6 w-1/4 text-white line-clamp-4">{overview} </p>
+      <p className="mb-5 max-w-xl text-sm text-white line-clamp-3 sm:text-base sm:line-clamp-4 lg:w-2/5">
+        {overview}
+      </p>
       <div className="gap-2.5 flex">
         <Button
           btnIcon={<FaPlay aria-label="Play Video" />}

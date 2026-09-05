@@ -77,7 +77,7 @@ const BodyContainer = () => {
   return (
     movies && (
       <div className="bg-black">
-        <div className="-mt-60 z-10 relative">
+        <div className="relative z-10">
           <PersonalizedRecommendations />
           <MovieList title={"Now Playing"} movies={movies?.nowPlayingMovies} />
           <MovieList title={"Popular"} movies={movies?.popularMovies} />

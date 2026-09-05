@@ -3,17 +3,19 @@ import { IMG_CDN_URL } from "../constants/constants";
 
 const TopTrailerListing = ({ movieData, onMovieClick }) => {
   return (
-    <ul className="px-20 w-30 absolute  flex z-index-9 bottom-44 right-0 cursor-pointer">
+    <ul className="absolute bottom-24 right-4 z-20 hidden cursor-pointer sm:flex lg:bottom-44 lg:right-10">
       {movieData?.map((movie, index) => (
-        <div key={movie?.id} className="relative group mx-1">
-          <li key={movie?.id} onClick={() => onMovieClick(movie)}>
+        <li
+          key={movie?.id}
+          className="group mx-1"
+          onClick={() => onMovieClick(movie)}
+        >
             <img
-              alt="movie-card"
-              className="w-16 h-full rounded object-cover"
+              alt={`${movie?.title || movie?.original_title || "Movie"} trailer`}
+              className="h-12 w-12 rounded object-cover transition-transform group-hover:scale-110 lg:h-16 lg:w-16"
               src={IMG_CDN_URL + movie?.poster_path}
             />
-          </li>
-        </div>
+        </li>
       ))}
     </ul>
   );

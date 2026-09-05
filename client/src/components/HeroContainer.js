@@ -29,7 +29,11 @@ const HeroContainer = () => {
   };
 
   return (
-    <div id="hero-container" aria-live="polite">
+    <section
+      id="hero-container"
+      aria-live="polite"
+      className="relative min-h-[32rem] overflow-hidden bg-black sm:min-h-[38rem] lg:min-h-0 lg:aspect-video"
+    >
       <VideoTitle
         title={original_title || movies[0]?.original_title}
         overview={overview || movies[0]?.overview}
@@ -43,7 +47,7 @@ const HeroContainer = () => {
         movieData={trailerMoviesList}
         onMovieClick={handleMovieClick}
       />
-    </div>
+    </section>
   );
 };
 
