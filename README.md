@@ -1,108 +1,94 @@
-# NetflixGPT
+# Netflix GPT
 
-A Netflix-style movie app with AI search, trailers, and movie recommendations.
+AI-powered Netflix-style movie discovery platform with natural-language search, personalized recommendations, and a production-grade Node/Express backend.
 
-## What It Includes
+[![Live Demo](https://img.shields.io/badge/Live-Demo-blue)](https://your-live-link.com)
+[![GitHub Stars](https://img.shields.io/github/stars/yourusername/netflix-gpt?style=social)](https://github.com/yourusername/netflix-gpt)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green)](LICENSE)
 
-1. **Authentication**
-   - Sign up and sign in with email and password
-   - MongoDB Atlas user storage
-   - bcrypt password hashing
-   - JWT sessions
+## Demo
 
-2. **Movie browsing**
-   - Now Playing, Popular, and Trending movies
-   - Movie details and trailers
-   - Responsive movie cards and layouts
+![Netflix GPT Demo](docs/demo.gif)
 
-3. **AI search**
-   - Natural-language search with OpenAI
-   - Movie data and recommendations from TMDB
+## Architecture
 
-## Built With
-
-- **Frontend:** React, React Router, Redux Toolkit, Tailwind CSS
-- **Backend:** Node.js, Express, Mongoose
-- **Database:** MongoDB Atlas
-- **Authentication:** JWT and bcryptjs
-- **APIs:** TMDB and OpenAI
-
-## Project Structure
-
-```text
-client/    React frontend
-server/    Express backend and MongoDB auth
+```mermaid
+graph TD
+    Client[React Frontend] -->|HTTPS| API[Express API]
+    API -->|JWT| Auth[(MongoDB Users)]
+    API -->|Cache| Redis[(Redis)]
+    API -->|OpenAI| GPT[OpenAI GPT]
+    API -->|TMDB| TMDB[TMDB API]
 ```
+
+## Features
+
+- **Authentication** — Signup, signin, JWT sessions, bcrypt password hashing, rate-limited auth endpoints
+- **Movie browsing** — Now Playing, Popular, and Trending movies with trailers and details
+- **AI search** — Natural-language queries via OpenAI GPT, with TMDB metadata enrichment
+- **Watchlist** — Add/remove saved movies with optimistic UI and duplicate prevention
+- **Recommendations** — AI suggestions with graceful fallback to TMDB trending when OpenAI is unavailable
+- **Server-side TMDB proxy** — API key never exposed to the browser
+- **Multi-language** — i18n with language switcher
+- **Responsive UI** — Tailwind CSS, Netflix-style layout
+
+## Tech Stack
+
+**Frontend:** React 18, Redux Toolkit, React Router, Tailwind CSS  
+**Backend:** Node.js, Express, Mongoose, Zod, Pino  
+**Infrastructure:** Docker, Redis, MongoDB Atlas, GitHub Actions  
+**AI / APIs:** OpenAI GPT, TMDB
 
 ## Quick Start
 
-### 1. Install
+### Option 1: Docker (recommended)
 
-```powershell
+```bash
+git clone https://github.com/yourusername/netflix-gpt.git
+cd netflix-gpt
+cp server/.env.example server/.env
+# edit server/.env with your values
+docker compose up --build
+```
+
+- App: http://localhost:3000
+- API health: http://localhost:5000/api/health
+
+### Option 2: Local development
+
+```bash
+# Install dependencies
 npm.cmd --prefix client install
 npm.cmd --prefix server install
+
+# Configure environment variables
+# Create server/.env (see server/.env.example)
+# Create client/.env (see client/.env.example)
+
+# Run both servers
+npm.cmd run dev
 ```
 
-### 2. Add environment variables
+## API Endpoints
 
-Create `server/.env`:
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/v1/auth/signup` | Create account |
+| POST | `/api/v1/auth/signin` | Sign in |
+| GET | `/api/v1/auth/me` | Get current user |
+| GET | `/api/v1/watchlist` | List saved movies |
+| POST | `/api/v1/watchlist` | Save a movie |
+| DELETE | `/api/v1/watchlist/:movieId` | Remove a movie |
+| POST | `/api/v1/recommendations` | AI movie recommendations |
+| GET | `/api/v1/health` | Health check |
 
-```env
-PORT=5000
-MONGO_URI=your_mongodb_atlas_uri
-JWT_SECRET=your_long_random_secret
-OPENAI_API_KEY=your_openai_api_key
-```
+Swagger UI: `/api-docs` (when running locally)
 
-Create `client/.env`:
+## Roadmap
 
-```env
-REACT_APP_API_URL=http://localhost:5000
-REACT_APP_TMDB_KEY=your_tmdb_api_key
-```
+See [`PROJECT_ROADMAP.md`](PROJECT_ROADMAP.md) for the phased senior-engineering roadmap covering backend hardening, Docker/CI, UX polish, AI resilience, and LinkedIn/GitHub positioning.
 
-The OpenAI key belongs in `server/.env` as `OPENAI_API_KEY`. Never put a
-secret key in a variable beginning with `REACT_APP_`, because React includes
-those values in the public browser bundle.
+## License
 
-### 3. Run
-
-Open two terminals:
-
-```powershell
-npm.cmd --prefix server start
-npm.cmd --prefix client start
-```
-
-- App: [http://localhost:3000](http://localhost:3000)
-- API health: [http://localhost:5000/api/health](http://localhost:5000/api/health)
-
-## Auth Endpoints
-
-- `POST /api/auth/signup` - Create an account
-- `POST /api/auth/signin` - Sign in
-- `GET /api/auth/me` - Get the current user
-
-## Possible Future Improvements
-
-- Add end-to-end browser tests
-- Add password reset and email verification
-- Move TMDB requests behind the API for stricter key control
-
-## Deploy to Vercel (free Hobby plan)
-
-1. Push this repository to GitHub and import it into Vercel.
-2. Keep the Vercel project **Root Directory** at the repository root.
-3. Add these Vercel environment variables:
-   - `MONGO_URI`
-   - `JWT_SECRET`
-   - `OPENAI_API_KEY`
-   - `REACT_APP_TMDB_KEY`
-4. Do not add `REACT_APP_API_URL` on Vercel; the frontend and API use the same URL.
-5. In MongoDB Atlas, allow Vercel connections. For a student demo, Atlas network
-   access can temporarily allow `0.0.0.0/0`; use a strong database password.
-6. Deploy. The included `vercel.json` builds React and routes `/api/*` to Express.
-
-After deployment, test sign-up, sign-in, movie browsing, AI search, saving a
-movie, refreshing the page, and opening a movie URL directly.
+MIT
 

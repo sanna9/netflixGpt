@@ -11,6 +11,7 @@ node_modules/
 .env.*
 !.env.example
 !**/.env.example
+PROJECT_ROADMAP.md
 
 # testing
 /coverage
